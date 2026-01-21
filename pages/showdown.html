@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en" class="h-full scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Showdown: Peppa Pig vs Eevee — serious fight analysis, tale of the tape, win conditions, and official prediction."
+    />
+    <title>Showdown — NEON ARENA</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (latest 3.x via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Orbitron', 'sans-serif'],
+            },
+            colors: {
+              peppa: {
+                50: "#ffe0f0",
+                100: "#ffb3d9",
+                200: "#ff80bf",
+                300: "#ff4da6",
+                400: "#ff1a8c",
+                500: "#ff0080", /* Neon Pink */
+                600: "#cc0066",
+                700: "#99004d",
+                800: "#660033",
+                900: "#33001a",
+              },
+              eevee: {
+                50: "#fff9e0",
+                100: "#ffedb3",
+                200: "#ffe080",
+                300: "#ffd44d",
+                400: "#ffc71a",
+                500: "#ffbb00", /* Neon Gold */
+                600: "#cc9600",
+                700: "#997000",
+                800: "#664b00",
+                900: "#332500",
+              },
+              dark: {
+                950: "#05050a", /* Deep Space */
+              }
+            },
+            boxShadow: {
+              arena: "0 30px 120px rgba(0,0,0,0.55)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="icon" href="../Images/logo-peppa-eevee.svg" type="image/svg+xml" />
+
+    <style>
+      .ring-focus:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(255, 47, 127, 0.35);
+      }
+      .arena-grid {
+        background-image:
+          radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.14) 1px, transparent 0),
+          linear-gradient(to right, rgba(255, 47, 127, 0.18), rgba(169, 111, 60, 0.18));
+        background-size: 22px 22px, 100% 100%;
+      }
+      .vs-badge {
+        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.08));
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto !important;
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const dark = stored ? stored === "dark" : prefersDark;
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+
+  <body class="h-full bg-dark-950 text-slate-100 antialiased font-sans">
+    <!-- Background -->
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div class="absolute inset-0 arena-grid opacity-30"></div>
+      <div class="absolute -left-44 -top-44 h-96 w-96 rounded-full bg-peppa-500/30 blur-[100px] mix-blend-screen"></div>
+      <div class="absolute -right-44 -bottom-44 h-[28rem] w-[28rem] rounded-full bg-eevee-500/30 blur-[100px] mix-blend-screen"></div>
+      <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent"></div>
+    </div>
+
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow-lg"
+      >Skip to content</a
+    >
+
+    <!-- Nav -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-dark-950/70 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <a href="../index.html" class="ring-focus flex items-center gap-3 rounded-full bg-white/10 px-3 py-1.5 shadow-lg shadow-black/40">
+          <img src="../Images/logo-peppa-eevee.svg" alt="Peppa vs Eevee logo" class="h-10 w-10 rounded-full shadow-lg" />
+          <div class="hidden sm:block leading-tight">
+            <div class="text-xs font-display font-bold uppercase tracking-[0.15em] text-peppa-500 drop-shadow-[0_0_5px_rgba(255,0,128,0.5)]">VS Arena</div>
+            <div class="text-sm font-medium text-white">Showdown</div>
+          </div>
+        </a>
+
+        <nav class="hidden items-center gap-2 text-sm font-medium text-slate-200 md:flex" aria-label="Main navigation">
+          <a href="../index.html#hero" class="ring-focus rounded-full px-3 py-1.5 hover:bg-white/10">Home</a>
+          <a href="../index.html#characters" class="ring-focus rounded-full px-3 py-1.5 hover:bg-white/10">Characters</a>
+          <a href="showdown.html" aria-current="page" class="ring-focus rounded-full bg-white/10 px-3 py-1.5">Showdown</a>
+          <a href="../index.html#start" class="ring-focus rounded-full bg-gradient-to-r from-peppa-500 via-fuchsia-500 to-eevee-500 px-4 py-1.5 text-white shadow-md shadow-black/40 hover:brightness-110">Start Round 1</a>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="themeToggle"
+            type="button"
+            class="ring-focus inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-yellow-300 shadow-md shadow-black/40 hover:bg-white/15"
+            aria-label="Toggle theme"
+          >
+            <svg id="icon-sun" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.22 4.22 5.64 5.64M18.36 18.36 19.78 19.78M2 12h2M20 12h2M4.22 19.78 5.64 18.36M18.36 5.64 19.78 4.22" />
+            </svg>
+            <svg id="icon-moon" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="mx-auto max-w-6xl px-4 pb-16 pt-10 space-y-10">
+      <!-- Title -->
+      <section class="space-y-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-300">Official Fight Brief</p>
+            <h1 class="font-display mt-1 text-3xl font-black tracking-tight text-white sm:text-5xl uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              <span class="text-peppa-500 drop-shadow-[0_0_8px_rgba(255,0,128,0.8)]">Peppa Pig</span> <span class="text-slate-400 text-2xl align-middle">vs</span> <span class="text-eevee-500 drop-shadow-[0_0_8px_rgba(255,187,0,0.8)]">Eevee</span>
+            </h1>
+            <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-200">
+              This page treats the matchup with maximum seriousness: roles, win conditions, tempo, and risk.
+              Verdict is <strong>fan-made</strong> and written in-universe.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-200">Sanctioned</span>
+            <span class="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-200">Round-Based</span>
+            <span class="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-200">No Cheap Shots</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hero matchup card -->
+      <section class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 shadow-arena">
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-peppa-500/10 via-white/5 to-eevee-500/10"></div>
+        <div class="relative grid gap-4 md:grid-cols-2">
+          <article class="rounded-2xl border border-white/10 bg-black/30 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <img src="../Images/peppa_new.png" alt="Peppa Pig" class="animate-bounce-custom h-14 w-14 object-contain drop-shadow-md" />
+                <div>
+                  <div class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-300">Contender A</div>
+                  <div class="text-xl font-black text-white">Peppa Pig</div>
+                  <div class="text-xs text-slate-300">Archetype: Disruptor / Pressure</div>
+                </div>
+              </div>
+              <span class="rounded-full bg-peppa-500/20 px-3 py-1 text-[11px] font-semibold text-peppa-100">CHAOS KIT</span>
+            </div>
+
+            <div class="mt-4 space-y-2 text-xs text-slate-200">
+              <div class="flex items-center justify-between"><span>Tempo</span><span class="font-semibold">High</span></div>
+              <div class="h-2 rounded-full bg-white/10"><div class="h-2 w-[78%] rounded-full bg-peppa-500"></div></div>
+              <div class="flex items-center justify-between"><span>Consistency</span><span class="font-semibold">Medium</span></div>
+              <div class="h-2 rounded-full bg-white/10"><div class="h-2 w-[52%] rounded-full bg-peppa-400"></div></div>
+              <div class="flex items-center justify-between"><span>Disruption</span><span class="font-semibold">Very High</span></div>
+              <div class="h-2 rounded-full bg-white/10"><div class="h-2 w-[88%] rounded-full bg-fuchsia-400"></div></div>
+            </div>
+          </article>
+
+          <article class="rounded-2xl border border-white/10 bg-black/30 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <img src="../Images/eevee_new.png" alt="Eevee" class="animate-bounce-custom h-14 w-14 object-contain drop-shadow-md" style="animation-delay: 1s;" />
+                <div>
+                  <div class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">Contender B</div>
+                  <div class="text-xl font-black text-white">Eevee</div>
+                  <div class="text-xs text-slate-300">Archetype: Adapter / Counterplay</div>
+                </div>
+              </div>
+              <span class="rounded-full bg-eevee-500/20 px-3 py-1 text-[11px] font-semibold text-amber-100">TACTICS KIT</span>
+            </div>
+
+            <div class="mt-4 space-y-2 text-xs text-slate-200">
+              <div class="flex items-center justify-between"><span>Tempo</span><span class="font-semibold">Medium</span></div>
+              <div class="h-2 rounded-full bg-white/10"><div class="h-2 w-[58%] rounded-full bg-amber-300"></div></div>
+              <div class="flex items-center justify-between"><span>Consistency</span><span class="font-semibold">High</span></div>
+              <div class="h-2 rounded-full bg-white/10"><div class="h-2 w-[80%] rounded-full bg-amber-200"></div></div>
+              <div class="flex items-center justify-between"><span>Adaptation</span><span class="font-semibold">Elite</span></div>
+              <div class="h-2 rounded-full bg-white/10"><div class="h-2 w-[92%] rounded-full bg-eevee-400"></div></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="pointer-events-none absolute inset-0 grid place-items-center">
+          <div class="vs-badge rounded-full px-6 py-2 text-sm font-black tracking-[0.22em] text-white">VS</div>
+        </div>
+      </section>
+
+      <!-- Tale of the tape -->
+      <section class="grid gap-4 lg:grid-cols-3">
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Tale of the Tape</div>
+          <h2 class="mt-1 text-xl font-black text-white">Match metrics</h2>
+          <p class="mt-2 text-sm text-slate-200">Battle outcomes usually follow repeatable patterns. These are the ones that matter.</p>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-black/30 p-5 lg:col-span-2">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="rounded-2xl bg-white/5 p-4">
+              <div class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-200">Peppa win conditions</div>
+              <ul class="mt-3 space-y-2 text-sm text-slate-200">
+                <li><strong>Overwhelm early</strong>: force mistakes before Eevee settles.</li>
+                <li><strong>Disrupt rhythm</strong>: turn every exchange into chaos.</li>
+                <li><strong>Stamina by laughter</strong>: never “tilts” in long rounds.</li>
+              </ul>
+            </div>
+            <div class="rounded-2xl bg-white/5 p-4">
+              <div class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">Eevee win conditions</div>
+              <ul class="mt-3 space-y-2 text-sm text-slate-200">
+                <li><strong>Survive Round 1</strong>: absorb the chaos and read patterns.</li>
+                <li><strong>Counterpick</strong>: adapt move-by-move with superior options.</li>
+                <li><strong>Close clean</strong>: win by consistency, not flash.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Official prediction -->
+      <section class="rounded-3xl border border-white/10 bg-gradient-to-br from-black/50 via-white/5 to-black/40 p-6 shadow-arena">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="max-w-2xl">
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Official prediction</div>
+            <h2 class="mt-2 text-2xl font-black text-white">Winner (serious call)</h2>
+            <p class="mt-3 text-sm leading-relaxed text-slate-200">
+              In a ruleset where both fighters must rely on repeatable, defensible advantages over multiple rounds,
+              the deciding factor is <strong>adaptation under pressure</strong>.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-black/40 p-4">
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Projected odds</div>
+            <div class="mt-2 text-3xl font-black text-white"><span id="oddsWinner">Eevee</span> <span class="text-slate-400">by decision</span></div>
+            <div class="mt-2 text-sm text-slate-200">Model confidence: <span class="font-semibold" id="confidence">68%</span></div>
+            <div class="mt-3 h-2 rounded-full bg-white/10">
+              <div id="confidenceBar" class="h-2 w-[68%] rounded-full bg-gradient-to-r from-eevee-400 to-amber-200"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-4 lg:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Key reason #1</div>
+            <p class="mt-2 text-sm text-slate-200"><strong>Option depth.</strong> Eevee’s kit scales: once patterns are identified, counters appear.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Key reason #2</div>
+            <p class="mt-2 text-sm text-slate-200"><strong>Low error rate.</strong> In long sets, consistent fundamentals outscore chaos.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Key reason #3</div>
+            <p class="mt-2 text-sm text-slate-200"><strong>Late-round control.</strong> If Round 1 isn’t decisive, Eevee’s odds rise sharply.</p>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-white/10 bg-black/40 p-4">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Serious caveat</div>
+              <p class="mt-2 text-sm text-slate-200">
+                If Peppa lands an early momentum spiral (crowd tilt + nonstop pressure), the match flips fast.
+                This is why the call is <strong>decision</strong>, not knockout.
+              </p>
+            </div>
+            <button
+              id="runSimBtn"
+              type="button"
+              class="ring-focus inline-flex items-center justify-center rounded-full bg-white/10 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-white/15"
+            >
+              Re-run the model
+            </button>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-300">
+            Simulation note: purely for fun; uses weighted factors, not real-world measurements.
+          </div>
+        </div>
+      </section>
+
+      <!-- Scorecard -->
+      <section class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Official scorecard</div>
+            <h2 class="mt-2 text-xl font-black text-white">Projected rounds (3)</h2>
+          </div>
+          <div class="text-xs text-slate-300">10-point must system (in-universe)</div>
+        </div>
+
+        <div class="mt-4 overflow-hidden rounded-2xl border border-white/10">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-black/40 text-xs uppercase tracking-[0.18em] text-slate-200">
+              <tr>
+                <th class="px-4 py-3">Round</th>
+                <th class="px-4 py-3">Peppa</th>
+                <th class="px-4 py-3">Eevee</th>
+                <th class="px-4 py-3">Notes</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10 bg-black/20 text-slate-200">
+              <tr>
+                <td class="px-4 py-3 font-semibold">1</td>
+                <td class="px-4 py-3" id="r1p">10</td>
+                <td class="px-4 py-3" id="r1e">9</td>
+                <td class="px-4 py-3">Peppa pressure spike; Eevee downloads patterns.</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">2</td>
+                <td class="px-4 py-3" id="r2p">9</td>
+                <td class="px-4 py-3" id="r2e">10</td>
+                <td class="px-4 py-3">Eevee stabilizes; counters land clean.</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">3</td>
+                <td class="px-4 py-3" id="r3p">9</td>
+                <td class="px-4 py-3" id="r3e">10</td>
+                <td class="px-4 py-3">Late-round control; Eevee closes without drama.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Analyst desk -->
+      <section class="rounded-3xl border border-white/10 bg-black/40 p-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">Analyst desk</div>
+            <h2 class="mt-2 text-xl font-black text-white">Two casters, one ridiculous match-up.</h2>
+          </div>
+          <p class="max-w-xs text-[11px] text-slate-300">
+            The tone here is half esports desk, half “someone is taking cartoon physics way too seriously”.
+          </p>
+        </div>
+
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+          <article class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <h3 class="text-sm font-semibold text-peppa-200">Caster 1 — “Team Peppa”</h3>
+            <p class="mt-2 text-sm text-slate-200">
+              “Look, if chaos had a coach, it would hire Peppa. You can’t ‘out-meta’ someone who thinks the win
+              condition is ‘did everyone laugh at least once?’ That’s an unbreakable mental game.”
+            </p>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <h3 class="text-sm font-semibold text-amber-200">Caster 2 — “Team Eevee”</h3>
+            <p class="mt-2 text-sm text-slate-200">
+              “Eevee is the spreadsheet player: calm, adaptable, quietly terrifying. The moment Peppa repeats a
+              move twice, you can almost hear a tiny click: ‘pattern recorded, counter ready.’”
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Alternate outcomes -->
+      <section class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">What if we’re wrong?</div>
+            <h2 class="mt-2 text-xl font-black text-white">Upsets & alternate endings</h2>
+          </div>
+          <p class="max-w-xs text-[11px] text-slate-300">
+            Even the most “serious” model can’t account for cartoon physics and friendship power-ups.
+          </p>
+        </div>
+
+        <div class="mt-4 grid gap-4 md:grid-cols-3 text-sm text-slate-200">
+          <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+            <h3 class="text-sm font-semibold text-peppa-200">Scenario A — Peppa upset</h3>
+            <p class="mt-2">
+              Peppa chains together a crowd-boosted combo: puddle splash → surprise hug → group chant. Eevee,
+              briefly overwhelmed by sheer wholesomeness, drops Round 3 on points.
+            </p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+            <h3 class="text-sm font-semibold text-amber-200">Scenario B — Silent sweep</h3>
+            <p class="mt-2">
+              Eevee says almost nothing, adjusts silently every round, and takes a 3–0 scorecard that looks boring
+              on paper but is terrifying to anyone planning a rematch.
+            </p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/30 p-4">
+            <h3 class="text-sm font-semibold text-slate-100">Scenario C — Double win</h3>
+            <p class="mt-2">
+              Judges call it for Eevee on technical points. The crowd calls it for Peppa on entertainment. The
+              “real” winner ends up being the inevitable team-up episode.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-white/10 bg-slate-950/60 py-6 text-xs">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 sm:flex-row">
+        <p class="text-[11px] text-slate-300">Fan project. Not affiliated with official rights holders.</p>
+        <a href="../index.html" class="ring-focus rounded-full px-3 py-1 text-[11px] font-medium text-slate-200 hover:bg-white/10">Back to Home</a>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const $ = (s, r = document) => r.querySelector(s);
+
+        // Theme toggle
+        const toggle = $("#themeToggle");
+        const iconSun = $("#icon-sun");
+        const iconMoon = $("#icon-moon");
+        function syncMode() {
+          const dark = document.documentElement.classList.contains("dark");
+          iconSun.classList.toggle("hidden", dark);
+          iconMoon.classList.toggle("hidden", !dark);
+        }
+        toggle?.addEventListener("click", () => {
+          const dark = document.documentElement.classList.toggle("dark");
+          try {
+            localStorage.setItem("theme", dark ? "dark" : "light");
+          } catch (_) {}
+          syncMode();
+        });
+        syncMode();
+
+        // Simple weighted simulation to vary confidence/scorecard slightly (still serious tone).
+        const base = {
+          peppa: { tempo: 0.78, consistency: 0.52, disruption: 0.88, adaptation: 0.35 },
+          eevee: { tempo: 0.58, consistency: 0.8, disruption: 0.45, adaptation: 0.92 },
+        };
+
+        function clamp(n, a, b) {
+          return Math.max(a, Math.min(b, n));
+        }
+
+        function compute() {
+          // Add tiny noise so “re-run” feels like a model, but keep outcome stable.
+          const noise = () => (Math.random() - 0.5) * 0.06;
+          const p =
+            0.25 * (base.peppa.tempo + noise()) +
+            0.20 * (base.peppa.consistency + noise()) +
+            0.35 * (base.peppa.disruption + noise()) +
+            0.20 * (base.peppa.adaptation + noise());
+          const e =
+            0.25 * (base.eevee.tempo + noise()) +
+            0.20 * (base.eevee.consistency + noise()) +
+            0.15 * (base.eevee.disruption + noise()) +
+            0.40 * (base.eevee.adaptation + noise());
+
+          const diff = e - p;
+          // Map diff -> confidence percent; keep within 55–78 to stay believable.
+          const conf = clamp(Math.round(65 + diff * 35), 55, 78);
+
+          // Scorecard: Peppa usually takes R1, Eevee takes R2/R3
+          const r1 = conf > 72 ? [9, 10] : [10, 9];
+          const r2 = [9, 10];
+          const r3 = conf < 60 ? [10, 9] : [9, 10];
+
+          return { conf, r1, r2, r3 };
+        }
+
+        function render() {
+          const { conf, r1, r2, r3 } = compute();
+          $("#confidence").textContent = conf + "%";
+          $("#confidenceBar").style.width = conf + "%";
+
+          $("#r1p").textContent = r1[0];
+          $("#r1e").textContent = r1[1];
+          $("#r2p").textContent = r2[0];
+          $("#r2e").textContent = r2[1];
+          $("#r3p").textContent = r3[0];
+          $("#r3e").textContent = r3[1];
+        }
+
+        $("#runSimBtn")?.addEventListener("click", render);
+      })();
+    </script>
+  </body>
+</html>
+
