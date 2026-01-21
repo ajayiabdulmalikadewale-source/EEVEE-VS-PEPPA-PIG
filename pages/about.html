@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — Peppa vs Eevee</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['"Inter"', 'sans-serif'] },
+            colors: {
+              eevee: { light: "#EAC190", DEFAULT: "#C59E6D", dark: "#8B5E3C" },
+              peppa: { light: "#FFD1DC", DEFAULT: "#FFB7C5", dark: "#E08CA0" },
+              bg: { main: "#F8F9FA" },
+              text: { main: "#2D3748", muted: "#718096" }
+            },
+            boxShadow: {
+              neu: "10px 10px 20px #d1d5db, -10px -10px 20px #ffffff",
+              'neu-pressed': "inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff",
+              'neu-sm': "5px 5px 10px #d1d5db, -5px -5px 10px #ffffff",
+              'neu-icon': "5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff",
+            }
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-bg-main text-text-main font-sans antialiased min-h-screen relative overflow-x-hidden flex flex-col">
+
+    <!-- Nav -->
+    <nav class="p-6 max-w-7xl mx-auto w-full relative z-50">
+      <div class="flex justify-between items-center">
+        <a href="../index.html" class="flex items-center gap-4 group">
+          <div class="w-12 h-12 rounded-full bg-white shadow-neu-icon flex items-center justify-center p-2 transition-transform group-hover:scale-110">
+             <img src="../Images/logo-peppa-eevee.svg" class="w-full h-full object-contain" alt="Logo">
+          </div>
+          <span class="text-xl font-black tracking-tighter text-text-main hidden md:block group-hover:text-peppa transition-colors">Peppa<span class="text-peppa">VS</span>Eevee</span>
+        </a>
+        <div class="hidden md:flex gap-8 items-center">
+          <a href="characters.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Characters</a>
+          <a href="storylines.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Storylines</a>
+          <a href="gallery.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Gallery</a>
+          <a href="showdown.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Battle Arena</a>
+          <a href="fan-corner.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Fan Corner</a>
+          <a href="about.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">About</a>
+        </div>
+        <button id="menu-btn" class="md:hidden w-12 h-12 rounded-full bg-white shadow-neu-icon flex items-center justify-center text-text-muted hover:text-peppa transition-colors">
+          <svg id="menu-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+          <svg id="close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden absolute top-24 left-6 right-6 bg-white/90 backdrop-blur-lg rounded-[2rem] shadow-neu p-6 flex flex-col gap-4 z-50 md:hidden">
+          <a href="characters.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Characters</a>
+          <a href="storylines.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Storylines</a>
+          <a href="gallery.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Gallery</a>
+          <a href="showdown.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Battle Arena</a>
+          <a href="fan-corner.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Fan Corner</a>
+          <a href="about.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">About</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-6 py-12 flex-grow w-full">
+      <header class="text-center mb-16">
+        <h1 class="text-4xl md:text-6xl font-black text-text-main mb-4">About <span class="text-transparent bg-clip-text bg-gradient-to-r from-peppa to-eevee">The Project</span></h1>
+      </header>
+
+      <div class="space-y-12">
+        
+        <!-- Project Purpose -->
+        <section class="bg-white p-8 rounded-[2rem] shadow-neu">
+          <h2 class="text-2xl font-bold text-text-main mb-4">Why This Exists</h2>
+          <p class="text-text-muted leading-relaxed">
+            This project was born out of a simple question: In a battle between absolute chaos and infinite adaptability, who wins? Peppa Pig represents the unstoppable force of toddler energy, while Eevee represents the potential to become anything. It is the ultimate crossover event for the modern era.
+          </p>
+        </section>
+
+        <!-- Disclaimer -->
+        <section class="bg-white p-8 rounded-[2rem] shadow-neu border-l-8 border-peppa">
+          <h2 class="text-2xl font-bold text-text-main mb-4">Disclaimer</h2>
+          <p class="text-text-muted leading-relaxed text-sm">
+            This is a non-commercial fan project. Peppa Pig is a trademark of eOne/Hasbro. Pokémon and Eevee are trademarks of Nintendo/Creatures/Game Freak. No copyright infringement is intended. All assets are used for educational and parody purposes.
+          </p>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="bg-white p-8 rounded-[2rem] shadow-neu">
+          <h2 class="text-2xl font-bold text-text-main mb-6">Built With</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 bg-bg-main rounded-xl text-center font-bold text-text-muted text-sm shadow-neu-sm">HTML5</div>
+            <div class="p-4 bg-bg-main rounded-xl text-center font-bold text-text-muted text-sm shadow-neu-sm">Tailwind CSS</div>
+            <div class="p-4 bg-bg-main rounded-xl text-center font-bold text-text-muted text-sm shadow-neu-sm">Vanilla JS</div>
+            <div class="p-4 bg-bg-main rounded-xl text-center font-bold text-text-muted text-sm shadow-neu-sm">Neumorphism</div>
+          </div>
+        </section>
+
+        <!-- Credits -->
+        <section class="text-center">
+          <p class="text-text-muted text-sm">
+            Designed & Developed by <span class="font-bold text-text-main">Trae AI</span> & <span class="font-bold text-text-main">The User</span>
+          </p>
+        </section>
+
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 py-8 text-center text-text-muted text-sm font-light bg-white/50 backdrop-blur-sm">
+      <p>&copy; 2026 Battle Systems Inc. • Modern Neumorphism UI</p>
+    </footer>
+
+    <script src="../js/main.js"></script>
+  </body>
+</html>

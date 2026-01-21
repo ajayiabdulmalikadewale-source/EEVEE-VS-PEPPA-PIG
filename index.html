@@ -1,1062 +1,191 @@
 <!doctype html>
-<html lang="en" class="h-full scroll-smooth">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Peppa Pig vs Eevee — a high-energy fan-made VS fight theme: arena vibes, fighter cards, moves, and matchups."
+      content="Peppa Pig vs Eevee — The Ultimate Modern Battle."
     />
-    <title>Peppa Pig vs Eevee — NEON ARENA</title>
+    <title>Peppa vs Eevee — MODERN SHOWDOWN</title>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Inter (Clean, Modern) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS (latest 3.x via CDN) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Orbitron', 'sans-serif'],
+              sans: ['"Inter"', 'sans-serif'],
             },
             colors: {
-              peppa: {
-                50: "#ffe0f0",
-                100: "#ffb3d9",
-                200: "#ff80bf",
-                300: "#ff4da6",
-                400: "#ff1a8c",
-                500: "#ff0080", /* Neon Pink */
-                600: "#cc0066",
-                700: "#99004d",
-                800: "#660033",
-                900: "#33001a",
-              },
               eevee: {
-                50: "#fff9e0",
-                100: "#ffedb3",
-                200: "#ffe080",
-                300: "#ffd44d",
-                400: "#ffc71a",
-                500: "#ffbb00", /* Neon Gold */
-                600: "#cc9600",
-                700: "#997000",
-                800: "#664b00",
-                900: "#332500",
+                light: "#EAC190",
+                DEFAULT: "#C59E6D",
+                dark: "#8B5E3C",
               },
-              dark: {
-                950: "#05050a", /* Deep Space */
+              peppa: {
+                light: "#FFD1DC",
+                DEFAULT: "#FFB7C5",
+                dark: "#E08CA0",
+              },
+              bg: {
+                main: "#F8F9FA",
+              },
+              text: {
+                main: "#2D3748",
+                muted: "#718096",
               }
             },
+            boxShadow: {
+              neu: "10px 10px 20px #d1d5db, -10px -10px 20px #ffffff",
+              'neu-pressed': "inset 6px 6px 12px #d1d5db, inset -6px -6px 12px #ffffff",
+              'neu-sm': "5px 5px 10px #d1d5db, -5px -5px 10px #ffffff",
+              'neu-icon': "5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff",
+            },
+            animation: {
+              float: 'float 6s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+            }
           },
         },
       };
     </script>
-
-    <!-- Preload main hero images for crisp first paint -->
-    <link rel="preload" as="image" href="Images/peppa pig.png" />
-    <link rel="preload" as="image" href="Images/evee.png" />
-    <link rel="preload" as="image" href="Images/logo-peppa-eevee.svg" />
-
-    <!-- Site icon -->
-    <link rel="icon" href="Images/logo-peppa-eevee.svg" type="image/svg+xml" />
-
     <style>
-      /* Tiny bit of custom CSS for fancier look */
       .blob {
-        filter: blur(36px);
-        opacity: 0.9;
-      }
-      .tilt-card {
-        transform-style: preserve-3d;
-        transition: transform 250ms ease, box-shadow 250ms ease, background 250ms ease;
-      }
-      .tilt-card:hover {
-        transform: translateY(-4px) rotate3d(1, 1, 0, 6deg);
-      }
-      .sparkle {
-        background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.9) 1px, transparent 0);
-        background-size: 18px 18px;
-      }
-      .ring-focus:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 4px rgba(255, 111, 145, 0.5);
-      }
-      .arena-grid {
-        background-image:
-          radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.16) 1px, transparent 0),
-          linear-gradient(to right, rgba(255, 47, 127, 0.18), rgba(169, 111, 60, 0.18));
-        background-size: 22px 22px, 100% 100%;
-      }
-      .vs-badge {
-        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.12));
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        box-shadow: 0 18px 60px rgba(15, 23, 42, 0.28);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          scroll-behavior: auto !important;
-          animation-duration: 0.001ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.001ms !important;
-        }
+        position: absolute;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.6;
       }
     </style>
-
-    <!-- Theme boot before first paint (no flash) -->
-    <script>
-      (function () {
-        try {
-          const stored = localStorage.getItem("theme");
-          const mq =
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches;
-          const dark = stored ? stored === "dark" : mq;
-          if (dark) {
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-          }
-        } catch (_) {}
-      })();
-    </script>
   </head>
+  <body class="bg-gradient-to-br from-peppa-light/30 via-white to-eevee-light/30 text-text-main font-sans antialiased min-h-screen relative overflow-x-hidden">
 
-  <body
-    class="h-full bg-dark-950 text-slate-100 antialiased selection:bg-peppa-500/90 selection:text-white font-sans"
-  >
-    <!-- BACKGROUND DECORATION -->
-    <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div class="absolute inset-0 arena-grid opacity-30"></div>
-      <!-- Enhanced Neon Blobs -->
-      <div class="blob absolute -left-20 -top-20 h-[30rem] w-[30rem] rounded-full bg-peppa-500/30 blur-[100px] mix-blend-screen"></div>
-      <div class="blob absolute -right-20 -bottom-20 h-[32rem] w-[32rem] rounded-full bg-eevee-500/30 blur-[100px] mix-blend-screen"></div>
-      <div class="blob absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 rounded-full bg-indigo-500/20 blur-[120px]"></div>
-    </div>
+    <!-- Decorative Blobs -->
+    <div class="blob bg-peppa w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="blob bg-eevee w-96 h-96 rounded-full bottom-0 right-0 translate-x-1/2 translate-y-1/2"></div>
 
-    <a
-      href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:shadow-lg dark:focus:bg-slate-900 dark:focus:text-slate-100"
-      >Skip to content</a
-    >
-
-    <!-- NAVBAR -->
-    <header class="sticky top-0 z-40 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a
-          href="#top"
-          class="ring-focus flex items-center gap-3 rounded-full bg-white/10 px-3 py-1.5 shadow-lg shadow-black/40"
-        >
-          <div class="relative">
-            <img
-              src="Images/logo-peppa-eevee.svg"
-              alt="Peppa × Eevee logo"
-              class="h-10 w-10 rounded-full shadow-lg"
-              loading="eager"
-            />
-            <span
-              class="absolute -right-1 -top-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-yellow-300 text-[10px] font-bold text-slate-900 shadow"
-              aria-hidden="true"
-              >★</span
-            >
+    <!-- Navigation -->
+    <nav class="p-6 max-w-7xl mx-auto relative z-50">
+      <div class="flex justify-between items-center">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-4 group">
+          <div class="w-12 h-12 rounded-full bg-white shadow-neu-icon flex items-center justify-center p-2 transition-transform group-hover:scale-110">
+             <img src="Images/logo-peppa-eevee.svg" class="w-full h-full object-contain" alt="Logo">
           </div>
-          <div class="hidden text-left sm:block">
-            <div class="text-xs font-display font-bold uppercase tracking-[0.15em] text-peppa-500 drop-shadow-[0_0_5px_rgba(255,0,128,0.5)]">VS Arena</div>
-            <div class="text-sm font-medium text-white">Peppa Pig vs Eevee</div>
-          </div>
+          <span class="text-xl font-black tracking-tighter text-text-main hidden md:block group-hover:text-peppa transition-colors">Peppa<span class="text-peppa">VS</span>Eevee</span>
         </a>
 
-        <nav class="hidden items-center gap-2 text-sm font-medium text-slate-200 md:flex" aria-label="Main navigation">
-          <a
-            href="#hero"
-            class="ring-focus rounded-full px-3 py-1.5 hover:bg-white/10"
-            >Home</a
-          >
-          <a
-            href="#characters"
-            class="ring-focus rounded-full px-3 py-1.5 hover:bg-white/10"
-            >Characters</a
-          >
-          <a
-            href="pages/showdown.html"
-            class="ring-focus rounded-full px-3 py-1.5 hover:bg-white/10"
-            >Showdown</a
-          >
-          <a
-            href="#world"
-            class="ring-focus rounded-full px-3 py-1.5 hover:bg-white/10"
-            >World</a
-          >
-          <a
-            href="#start"
-            class="ring-focus rounded-full bg-gradient-to-r from-peppa-500 via-fuchsia-500 to-eevee-500 px-4 py-1.5 text-white shadow-md shadow-black/40 hover:brightness-110"
-            >Enter Arena</a
-          >
-        </nav>
-
-        <div class="flex items-center gap-2">
-          <button
-            id="themeToggle"
-            type="button"
-            class="ring-focus inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-yellow-300 shadow-md shadow-black/40 hover:bg-white/15"
-            aria-label="Toggle theme"
-          >
-            <svg
-              id="icon-sun"
-              class="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.22 4.22 5.64 5.64M18.36 18.36 19.78 19.78M2 12h2M20 12h2M4.22 19.78 5.64 18.36M18.36 5.64 19.78 4.22" />
-            </svg>
-            <svg
-              id="icon-moon"
-              class="hidden h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79Z"
-              />
-            </svg>
-          </button>
-
-          <button
-            id="menuToggle"
-            type="button"
-            class="ring-focus inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-100 shadow-md shadow-black/40 hover:bg-white/15 md:hidden"
-            aria-label="Open navigation"
-            aria-expanded="false"
-          >
-            <svg
-              id="icon-menu"
-              class="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M4 6h16M4 12h16M4 18h10" />
-            </svg>
-            <svg
-              id="icon-close"
-              class="hidden h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M6 6l12 12M6 18L18 6" />
-            </svg>
-          </button>
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex gap-8 items-center">
+          <a href="pages/characters.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Characters</a>
+          <a href="pages/storylines.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Storylines</a>
+          <a href="pages/gallery.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Gallery</a>
+          <a href="pages/showdown.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Battle Arena</a>
+          <a href="pages/fan-corner.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">Fan Corner</a>
+          <a href="pages/about.html" class="nav-link text-text-muted font-bold hover:text-eevee transition-colors">About</a>
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-btn" class="md:hidden w-12 h-12 rounded-full bg-white shadow-neu-icon flex items-center justify-center text-text-muted hover:text-peppa transition-colors">
+          <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+          <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      <!-- Mobile menu -->
-      <div
-        id="mobileMenu"
-        class="sparkle hidden border-t border-white/10 bg-dark-950/95 px-4 pb-4 pt-2 text-sm shadow-lg md:hidden"
-      >
-        <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
-          <a
-            href="#hero"
-            class="ring-focus rounded-full px-3 py-1.5 text-slate-100 hover:bg-white/10"
-            >Home</a
-          >
-          <a
-            href="#characters"
-            class="ring-focus rounded-full px-3 py-1.5 text-slate-100 hover:bg-white/10"
-            >Characters</a
-          >
-          <a
-            href="pages/showdown.html"
-            class="ring-focus rounded-full px-3 py-1.5 text-slate-100 hover:bg-white/10"
-            >Showdown</a
-          >
-          <a
-            href="#world"
-            class="ring-focus rounded-full px-3 py-1.5 text-slate-100 hover:bg-white/10"
-            >World</a
-          >
-          <a
-            href="#start"
-            class="ring-focus mt-1 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-peppa-500 via-fuchsia-500 to-eevee-500 px-4 py-1.5 text-sm font-semibold text-white shadow-md shadow-black/50 hover:brightness-110"
-            >Enter Arena</a
-          >
-        </nav>
+      <!-- Mobile Menu Dropdown -->
+      <div id="mobile-menu" class="hidden absolute top-24 left-6 right-6 bg-white/90 backdrop-blur-lg rounded-[2rem] shadow-neu p-6 flex flex-col gap-4 z-50 md:hidden">
+          <a href="pages/characters.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Characters</a>
+          <a href="pages/storylines.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Storylines</a>
+          <a href="pages/gallery.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Gallery</a>
+          <a href="pages/showdown.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Battle Arena</a>
+          <a href="pages/fan-corner.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">Fan Corner</a>
+          <a href="pages/about.html" class="nav-link text-text-main font-bold p-2 hover:bg-gray-50 rounded-lg">About</a>
       </div>
-    </header>
+    </nav>
 
-    <main id="main" class="mx-auto max-w-6xl px-4 pb-16 pt-8 space-y-20">
-      <!-- HERO -->
-      <section id="hero" class="relative pt-4">
-        <div class="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-center">
-          <!-- Text -->
-          <div class="space-y-6">
-            <p
-              class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-100 shadow-sm shadow-black/40"
-            >
-              <span class="inline-flex h-2 w-2 rounded-full bg-peppa-500"></span>
-              <span class="inline-flex h-2 w-2 rounded-full bg-eevee-500"></span>
-              Battle Mode: ON
-            </p>
-            <h1
-              class="font-display text-balance text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-            >
-              <span class="text-peppa-500 drop-shadow-[0_0_10px_rgba(255,0,128,0.8)]">PEPPA</span>
-              <span class="text-slate-500 text-3xl align-middle mx-2">VS</span>
-              <span class="text-eevee-500 drop-shadow-[0_0_10px_rgba(255,187,0,0.8)]">EEVEE</span>
-            </h1>
-            <p class="max-w-xl text-balance text-sm leading-relaxed text-slate-200">
-              A fan-made VS arena where muddy puddle chaos collides with evolution tactics. Pick a side,
-              pick a move, and craft your first round like an anime intro.
-            </p>
-
-            <div class="flex flex-wrap items-center gap-3">
-              <a
-                href="#start"
-                class="ring-focus inline-flex items-center justify-center rounded-full bg-gradient-to-r from-peppa-500 via-fuchsia-500 to-eevee-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-black/50 hover:brightness-110"
-              >
-                Start Round 1
-              </a>
-              <a
-                href="#characters"
-                class="ring-focus inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/10"
-              >
-                Choose your fighter
-              </a>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-3">
-              <div
-                class="inline-flex items-center gap-3 rounded-2xl bg-white/10 px-3 py-2 shadow-md shadow-black/50"
-              >
-                <img
-                  src="Images/logo-peppa-eevee.svg"
-                  alt=""
-                  class="h-10 w-10 rounded-xl"
-                  aria-hidden="true"
-                  loading="lazy"
-                />
-                <div class="leading-tight">
-                  <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                    Arena vibe
-                  </div>
-                  <div class="text-sm font-semibold text-white">
-                    Comedy chaos × tactical clutch
-                  </div>
-                </div>
-              </div>
-
-              <div
-                class="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2 text-xs font-medium text-slate-200 shadow-md shadow-black/50"
-              >
-                <span class="inline-flex h-2 w-2 rounded-full bg-peppa-500"></span>
-                <span class="inline-flex h-2 w-2 rounded-full bg-eevee-500"></span>
-                <span>Pick a side • Lock a move • Start the round</span>
-              </div>
-            </div>
-
-            <dl
-              class="mt-2 grid max-w-xl grid-cols-3 gap-3 rounded-2xl bg-white/10 p-3 text-xs text-slate-200 shadow-md shadow-black/50"
-            >
-              <div>
-                <dt class="font-semibold">Arena</dt>
-                <dd class="mt-0.5 text-[11px] text-slate-300">Round-based matchups.</dd>
-              </div>
-              <div>
-                <dt class="font-semibold">Rule</dt>
-                <dd class="mt-0.5 text-[11px] text-slate-300">Friendly, fan-made.</dd>
-              </div>
-              <div>
-                <dt class="font-semibold">Goal</dt>
-                <dd class="mt-0.5 text-[11px] text-slate-300">Create your “Episode 1”.</dd>
-              </div>
-            </dl>
-          </div>
-
-          <!-- Hero Art -->
-          <div class="relative">
-            <div
-              class="absolute -inset-3 -z-10 rounded-[2.5rem] bg-gradient-to-br from-peppa-200/80 via-fuchsia-200/80 to-eevee-200/80 opacity-80 blur-2xl dark:from-peppa-900/40 dark:via-fuchsia-900/40 dark:to-eevee-900/40"
-            ></div>
-            <div
-              class="tilt-card relative overflow-hidden rounded-[2.5rem] border border-white/15 bg-slate-950/50 shadow-[0_18px_60px_rgba(0,0,0,0.45)]"
-            >
-              <div class="relative grid h-full gap-0 sm:grid-cols-2">
-                <!-- Peppa side -->
-                <div class="relative flex flex-col justify-between bg-gradient-to-b from-peppa-950/30 via-peppa-900/20 to-slate-950/50 p-4 pt-6">
-                  <div class="flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                      <span
-                        class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-black text-peppa-200 shadow"
-                        >P</span
-                      >
-                      <div class="leading-tight">
-                        <p class="text-xs font-semibold text-peppa-200">
-                          Team Peppa
-                        </p>
-                        <p class="text-[11px] text-peppa-200/80">
-                          Mud puddle chaos kit.
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      class="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-peppa-200 shadow"
-                      >Brawler</span
-                    >
-                  </div>
-
-                  <figure class="mt-3">
-                    <img
-                      src="Images/peppa_new.png"
-                      alt="Peppa Pig smiling in a colorful scene."
-                      class="animate-bounce-custom h-32 w-full object-contain object-center drop-shadow-xl sm:h-36"
-                      loading="eager"
-                    />
-                    <figcaption class="mt-2 text-[11px] text-peppa-800/80 dark:text-peppa-100">
-                      “First hit? Probably a puddle splash.”
-                    </figcaption>
-                  </figure>
-
-                  <dl
-                    class="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-white/10 p-2 text-[11px] text-peppa-50 shadow-sm shadow-black/40"
-                  >
-                    <div>
-                      <dt class="font-semibold">Vibe</dt>
-                      <dd>Unpredictable.</dd>
-                    </div>
-                    <div>
-                      <dt class="font-semibold">Signature</dt>
-                      <dd>Puddle Splash.</dd>
-                    </div>
-                  </dl>
-                </div>
-
-                <!-- Eevee side -->
-                <div
-                  class="relative flex flex-col justify-between bg-gradient-to-b from-eevee-950/35 via-amber-900/10 to-dark-950/55 p-4 pt-6"
-                >
-                  <div class="flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                      <span
-                        class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[11px] font-black text-amber-200 shadow"
-                        >E</span
-                      >
-                      <div class="leading-tight">
-                        <p class="text-xs font-semibold text-amber-200">
-                          Team Eevee
-                        </p>
-                        <p class="text-[11px] text-amber-200/80">
-                          Evolution tactics kit.
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      class="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200 shadow"
-                      >Strategist</span
-                    >
-                  </div>
-
-                  <figure class="mt-3">
-                    <img
-                      src="Images/eevee_new.png"
-                      alt="Eevee standing in a warm, glowing forest."
-                      class="animate-bounce-custom h-32 w-full object-contain object-center drop-shadow-xl sm:h-36"
-                      style="animation-delay: 1.5s;"
-                      loading="eager"
-                    />
-                    <figcaption class="mt-2 text-[11px] text-amber-100/90">
-                      “Plan A through Z… then evolve mid-fight.”
-                    </figcaption>
-                  </figure>
-
-                  <dl
-                    class="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-white/10 p-2 text-[11px] text-amber-50 shadow-sm shadow-black/40"
-                  >
-                    <div>
-                      <dt class="font-semibold">Vibe</dt>
-                      <dd>Clutch plays.</dd>
-                    </div>
-                    <div>
-                      <dt class="font-semibold">Signature</dt>
-                      <dd>Quick Attack.</dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
-
-              <!-- VS badge -->
-              <div class="pointer-events-none absolute inset-0 grid place-items-center">
-                <div class="vs-badge rounded-full px-5 py-2 text-sm font-black tracking-[0.2em] text-white">
-                  VS
-                </div>
-              </div>
-
-              <div
-                class="absolute inset-x-0 -bottom-10 flex items-center justify-center"
-                aria-hidden="true"
-              >
-                <div
-                  class="inline-flex items-center gap-2 rounded-full bg-black/60 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-50 shadow-lg shadow-black/80"
-                >
-                  <span class="h-1.5 w-10 rounded-full bg-gradient-to-r from-peppa-400 to-eevee-400"></span>
-                  <span>Choose your fighter.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CHARACTERS -->
-      <section id="characters" class="space-y-8">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-600 dark:text-peppa-300">
-              Character Deck
-            </p>
-            <h2 class="mt-1 text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              Meet the squads.
-            </h2>
-            <p class="mt-2 max-w-lg text-sm text-slate-700 dark:text-slate-300">
-              A quick taste of how Peppa’s family and Eevee’s evolutions feel together. Later, you can
-              turn this into a full characters page with stats and filters.
-            </p>
-          </div>
-
-          <div
-            class="inline-flex items-center gap-2 rounded-full bg-white/70 px-2 py-1 text-[11px] font-medium text-slate-700 shadow-sm dark:bg-slate-900/80 dark:text-slate-200"
-          >
-            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-            <span>Tip: every card can become its own profile page later.</span>
-          </div>
-        </div>
-
-        <div class="grid gap-5 md:grid-cols-3">
-          <!-- Peppa Family -->
-          <article
-            class="group tilt-card relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 shadow-lg shadow-black/60 hover:border-peppa-400/70"
-          >
-            <div
-              class="pointer-events-none absolute -right-12 -top-16 h-32 w-32 rounded-full bg-peppa-200/60 blur-3xl dark:bg-peppa-700/40"
-            ></div>
-            <header class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-[11px] font-black text-peppa-500 shadow"
-                  >PF</span
-                >
-                <div>
-                  <h3 class="text-sm font-semibold text-peppa-800 dark:text-peppa-100">
-                    Peppa & Family
-                  </h3>
-                  <p class="text-[11px] text-peppa-800/80 dark:text-peppa-100/80">
-                    Laughs, hugs, puddles.
-                  </p>
-                </div>
-              </div>
-              <span
-                class="rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-peppa-500 shadow-sm"
-                >Heart</span
-              >
-            </header>
-
-            <figure class="mt-3 overflow-hidden rounded-2xl border border-peppa-100/80 bg-white/80">
-              <img
-                src="Images/peppa_one_big_family.png"
-                alt="Peppa Pig with her family, smiling together."
-                class="h-28 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 sm:h-32"
-                loading="lazy"
-              />
-            </figure>
-
-            <p class="mt-3 text-[13px] leading-relaxed text-peppa-900 dark:text-peppa-50">
-              Big love, big silliness. This crew turns every arena into a playground first, and only
-              then a battle.
-            </p>
-
-            <dl
-              class="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-white/80 p-2 text-[11px] text-peppa-900 shadow-sm dark:bg-peppa-950/80 dark:text-peppa-50"
-            >
-              <div>
-                <dt class="font-semibold">Strength</dt>
-                <dd>Team spirit.</dd>
-              </div>
-              <div>
-                <dt class="font-semibold">Weakness</dt>
-                <dd>Snack breaks.</dd>
-              </div>
-              <div>
-                <dt class="font-semibold">Mood</dt>
-                <dd>Giggle storm.</dd>
-              </div>
-            </dl>
-          </article>
-
-          <!-- Eevee Evolutions -->
-          <article
-            class="group tilt-card relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-black/40 via-white/5 to-black/40 p-4 shadow-lg shadow-black/60 hover:border-amber-300/80"
-          >
-            <div
-              class="pointer-events-none absolute -left-12 -top-16 h-32 w-32 rounded-full bg-amber-200/70 blur-3xl dark:bg-amber-700/40"
-            ></div>
-            <header class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-900/95 text-[11px] font-black text-amber-300 shadow"
-                  >EE</span
-                >
-                <div>
-                  <h3 class="text-sm font-semibold text-eevee-800 dark:text-amber-100">
-                    Eevee Evolutions
-                  </h3>
-                  <p class="text-[11px] text-eevee-800/80 dark:text-amber-100/80">
-                    So many forms, so many tricks.
-                  </p>
-                </div>
-              </div>
-              <span
-                class="rounded-full bg-slate-900/95 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200 shadow-sm"
-                >Flex</span
-              >
-            </header>
-
-            <figure class="mt-3 overflow-hidden rounded-2xl border border-amber-100/80 bg-slate-900/85">
-              <img
-                src="Images/eevee_evolution.png"
-                alt="A lineup of Eevee evolutions glowing in a stylized scene."
-                class="h-28 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 sm:h-32"
-                loading="lazy"
-              />
-            </figure>
-
-            <p class="mt-3 text-[13px] leading-relaxed text-eevee-900 dark:text-amber-50">
-              Fire, water, psychic, fairy—this deck can twist the rules of your story in a second.
-            </p>
-
-            <dl
-              class="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-white/80 p-2 text-[11px] text-eevee-900 shadow-sm dark:bg-eevee-950/80 dark:text-amber-50"
-            >
-              <div>
-                <dt class="font-semibold">Strength</dt>
-                <dd>Adaptation.</dd>
-              </div>
-              <div>
-                <dt class="font-semibold">Weakness</dt>
-                <dd>Too many choices.</dd>
-              </div>
-              <div>
-                <dt class="font-semibold">Mood</dt>
-                <dd>Soft focus.</dd>
-              </div>
-            </dl>
-          </article>
-
-          <!-- Neutral Arena -->
-          <article
-            class="group tilt-card relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-black/40 via-slate-900/70 to-black/40 p-4 shadow-lg shadow-black/60 hover:border-sky-400/80"
-          >
-            <div
-              class="pointer-events-none absolute inset-x-0 -top-10 h-20 bg-gradient-to-r from-peppa-300/40 via-sky-200/40 to-eevee-300/40 blur-2xl dark:from-peppa-700/30 dark:via-sky-800/30 dark:to-eevee-800/30"
-            ></div>
-            <header class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-sky-600 text-[11px] font-black text-sky-50 shadow"
-                  >AR</span
-                >
-                <div>
-                  <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                    Dream Arena
-                  </h3>
-                  <p class="text-[11px] text-slate-700/85 dark:text-slate-300/85">
-                    Where puddles and forests collide.
-                  </p>
-                </div>
-              </div>
-              <span
-                class="rounded-full bg-sky-600 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-50 shadow-sm"
-                >Stage</span
-              >
-            </header>
-
-            <figure class="mt-3 overflow-hidden rounded-2xl border border-sky-100/80 bg-gradient-to-r from-sky-100 via-peppa-100 to-emerald-100 dark:from-slate-900 dark:via-peppa-900/20 dark:to-emerald-900/30">
-              <img
-                src="Images/peppa family.png"
-                alt="Peppa's world blended with a soft nature backdrop."
-                class="h-28 w-full object-cover object-center opacity-95 mix-blend-multiply transition duration-500 group-hover:scale-105 group-hover:opacity-100 dark:mix-blend-normal sm:h-32"
-                loading="lazy"
-              />
-            </figure>
-
-            <p class="mt-3 text-[13px] leading-relaxed text-slate-800 dark:text-slate-200">
-              You get to decide: is this a friendly game, a tournament, or a cozy team-up picnic with
-              surprise battles?
-            </p>
-
-            <button
-              id="ideaButton"
-              type="button"
-              class="ring-focus mt-3 inline-flex items-center justify-center rounded-full border border-peppa-500 bg-transparent px-4 py-1.5 text-[11px] font-semibold tracking-wide text-peppa-500 shadow-md hover:bg-peppa-500 hover:text-white transition-all"
-            >
-              Shuffle a story idea
-            </button>
-            <p
-              id="ideaOutput"
-              class="mt-2 text-[11px] text-slate-600 dark:text-slate-300"
-            >
-              Tap the button to get a soft prompt for your next scene.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <!-- SHOWDOWN PREVIEW -->
-      <section id="showdown" class="space-y-6">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-600 dark:text-peppa-300">
-              First Matchup
-            </p>
-            <h2 class="mt-1 text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              Who takes the first round?
-            </h2>
-          </div>
-          <div
-            class="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-[11px] font-medium text-slate-700 shadow-sm dark:bg-slate-900/80 dark:text-slate-200"
-          >
-            <span class="h-2 w-2 rounded-full bg-peppa-500"></span>
-            <span class="h-2 w-2 rounded-full bg-eevee-500"></span>
-            <span>Drag the slider, pick your winner, keep it friendly.</span>
-          </div>
-        </div>
-
-        <div
-          class="relative overflow-hidden rounded-3xl border border-white/70 bg-white/90 p-4 shadow-xl shadow-slate-200/80 dark:border-slate-800 dark:bg-dark-950/95 dark:shadow-none"
-        >
-          <div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] md:items-center">
-            <div class="space-y-4">
-              <p class="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                Imagine Peppa showing up in rain boots, Eevee trotting in with the softest fur, and
-                everyone trying not to laugh before the match even starts. Use this card as the first
-                “episode” of your Peppa × Eevee series.
-              </p>
-
-              <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                <div class="flex items-center justify-between">
-                  <span>Peppa energy</span>
-                  <span>Eevee energy</span>
-                </div>
-                <div class="relative h-2 rounded-full bg-slate-100 dark:bg-slate-800">
-                  <div
-                    id="sliderFill"
-                    class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-peppa-400 via-fuchsia-400 to-eevee-400"
-                    style="width: 50%"
-                  ></div>
-                </div>
-                <input
-                  id="energySlider"
-                  type="range"
-                  min="0"
-                  max="100"
-                  value="50"
-                  class="mt-1 w-full accent-peppa-500"
-                  aria-label="Balance between Peppa and Eevee"
-                />
-                <p
-                  id="sliderLabel"
-                  class="mt-1 text-[11px] font-semibold text-slate-700 dark:text-slate-200"
-                >
-                  Perfect balance: Peppa chaos × Eevee strategy.
-                </p>
-              </div>
-            </div>
-
-        <div
-          class="sparkle relative mt-2 flex flex-col gap-3 rounded-2xl bg-gradient-to-bl from-peppa-500/15 via-white/5 to-eevee-500/15 p-3 text-xs text-slate-100 shadow-md shadow-black/50"
-        >
-              <div class="flex items-center justify-between gap-2">
-              <span class="font-semibold text-peppa-200">Today’s matchup script</span>
-                <span
-                class="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-200 shadow-sm"
-                >Round 1</span
-                >
-              </div>
-              <p id="scriptLine" class="leading-relaxed">
-                Peppa accidentally challenges Eevee to a puddle-jumping contest. Eevee thinks it’s a
-                battle… until they both end up giggling in the mud.
-              </p>
-            <button
-              id="scriptButton"
-              type="button"
-              class="ring-focus inline-flex w-max items-center justify-center rounded-full bg-white/10 px-4 py-1.5 text-[11px] font-semibold text-slate-100 shadow hover:bg-white/15"
-            >
-                Shuffle another script
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- MOVES & STRATEGIES -->
-      <section class="space-y-6">
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-300">Moves & strategies</p>
-            <h2 class="text-2xl font-black tracking-tight text-white">What each side actually does.</h2>
-            <p class="mt-2 max-w-2xl text-sm text-slate-200">
-              Serious breakdown, silly naming. These are written like real fight notes but still fit the Peppa × Eevee universe.
-            </p>
-          </div>
-          <p class="text-[11px] text-slate-400 max-w-xs">
-            Use this as reference when you design the mini-game or longer stories: every move can become a mechanic or an episode title.
-          </p>
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-2">
-          <article class="rounded-3xl border border-white/10 bg-black/40 p-5">
-            <header class="flex items-center justify-between gap-3">
-              <div>
-                <div class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-300">Peppa gameplan</div>
-                <h3 class="mt-1 text-lg font-black text-white">Chaos-first pressure</h3>
-              </div>
-              <span class="rounded-full bg-peppa-500/20 px-3 py-1 text-[11px] font-semibold text-peppa-100">EARLY ROUND EDGE</span>
-            </header>
-            <ul class="mt-4 space-y-3 text-sm text-slate-200">
-              <li>
-                <strong>Muddy Momentum:</strong>
-                open with something loud and goofy; the opponent wastes turns reacting instead of planning.
-              </li>
-              <li>
-                <strong>Family Assist:</strong>
-                support characters jump in as cameos, adding mini buffs like “louder cheering” or “snack break heal”.
-              </li>
-              <li>
-                <strong>Giggle Guard:</strong>
-                refuses to tilt; even a “loss” turns into a story Peppa retells as a victory later.
-              </li>
-            </ul>
-          </article>
-
-          <article class="rounded-3xl border border-white/10 bg-black/40 p-5">
-            <header class="flex items-center justify-between gap-3">
-              <div>
-                <div class="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">Eevee gameplan</div>
-                <h3 class="mt-1 text-lg font-black text-white">Download, then punish</h3>
-              </div>
-              <span class="rounded-full bg-eevee-500/20 px-3 py-1 text-[11px] font-semibold text-amber-100">LATE ROUND EDGE</span>
-            </header>
-            <ul class="mt-4 space-y-3 text-sm text-slate-200">
-              <li>
-                <strong>Pattern Scan:</strong>
-                first exchanges are “data only”—light hits, lots of dodging, reading exactly how Peppa swings the chaos.
-              </li>
-              <li>
-                <strong>Form Shift:</strong>
-                adjusts “type” mentally: faster, tankier, or trickier depending on what just happened.
-              </li>
-              <li>
-                <strong>Safe Closer:</strong>
-                when ahead on points, plays boring but perfect; the fun part was getting the lead, now it’s about not dropping it.
-              </li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <!-- WORLD + HOW TO START -->
-      <section
-        id="world"
-        class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/50"
-      >
-        <div
-          class="pointer-events-none absolute inset-x-0 -top-20 h-40 bg-gradient-to-r from-peppa-500/20 via-sky-500/15 to-eevee-500/20 blur-3xl"
-        ></div>
-        <div class="relative grid gap-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-center">
-          <div class="space-y-4">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-peppa-300">Rules of the Ring</p>
-            <h2 class="text-2xl font-black tracking-tight text-white">
-              Arena lore: simple, punchy, fun.
-            </h2>
-            <p class="text-sm leading-relaxed text-slate-200">
-              This homepage is themed as a VS fight: bold intros, fighter cards, signature moves, and “Round 1” story hooks.
-              Keep it hype, readable, and respectful (fan-made, no official affiliation).
-            </p>
-
-            <ol
-              id="start"
-              class="mt-2 grid gap-2 text-xs text-slate-200"
-            >
-              <li class="flex gap-2">
-                <span class="mt-0.5 h-5 w-5 rounded-full bg-peppa-500 text-[11px] font-bold text-white inline-flex items-center justify-center">1</span>
-                <span><strong>Pick the rules:</strong> friendly spar, tournament bracket, or “first to 3 rounds”.</span>
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-0.5 h-5 w-5 rounded-full bg-eevee-500 text-[11px] font-bold text-white inline-flex items-center justify-center">2</span>
-                <span><strong>Choose your fighter:</strong> Peppa’s chaos kit or Eevee’s tactics kit.</span>
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-0.5 h-5 w-5 rounded-full bg-sky-500 text-[11px] font-bold text-white inline-flex items-center justify-center">3</span>
-                <span><strong>Lock a move:</strong> name a signature move and start “Episode 1”.</span>
-              </li>
-            </ol>
-          </div>
-
-          <div class="space-y-4">
-            <figure
-              class="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-sm"
-            >
-              <img
-                src="Images/peppa family.png"
-                alt="Arena poster art"
-                class="h-36 w-full object-cover object-center opacity-95"
-                loading="lazy"
-              />
-            </figure>
-            <div
-              class="grid gap-2 rounded-2xl bg-black/50 p-3 text-[11px] text-slate-100 shadow-lg shadow-black/80"
-            >
-              <div class="flex items-center justify-between gap-2">
-                <span class="font-semibold text-peppa-200">VS Homepage Checklist</span>
-                <span
-                  class="rounded-full bg-peppa-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white"
-                  >Arena Ready</span
-                >
-              </div>
-              <ul class="space-y-1">
-                <li>• Strong “VS” branding + arena lighting.</li>
-                <li>• Fighter cards with roles + signature moves.</li>
-                <li>• Round preview (slider + script shuffler).</li>
-                <li>• Clear CTA: Start Round 1 / Choose fighter.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="border-t border-white/10 bg-slate-950/60 py-6 text-xs">
-      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 sm:flex-row">
-        <p class="text-[11px] text-slate-300">
-          Fan project. Not affiliated with the official owners of Peppa Pig, Pokémon, or Eevee.
+    <!-- Hero Section -->
+    <main class="max-w-7xl mx-auto px-6 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- Text Content -->
+      <div class="space-y-8 z-10">
+        <span class="inline-block px-4 py-2 rounded-full bg-white shadow-neu-sm text-xs font-bold tracking-widest text-text-muted uppercase">
+          The Ultimate Crossover Event
+        </span>
+        <h1 class="text-5xl lg:text-7xl font-black leading-tight text-text-main">
+          Choose Your <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-peppa to-eevee">Champion</span>
+        </h1>
+        <p class="text-lg text-text-muted max-w-md leading-relaxed">
+          The chaotic energy of Peppa Pig meets the adaptable power of Eevee. 
+          Who will reign supreme in the battle of the century?
         </p>
-        <div class="flex flex-wrap items-center gap-2">
-          <a
-            href="rules.md"
-            class="ring-focus rounded-full px-3 py-1 text-[11px] font-medium text-slate-200 hover:bg-white/10"
-            >Rules & Guidelines</a
-          >
-          <span class="hidden text-slate-500 sm:inline">·</span>
-          <span class="text-[11px] text-slate-300"
-            >Built with HTML, Tailwind CSS, and vanilla JavaScript.</span
-          >
+        
+        <div class="flex gap-6 pt-4">
+          <a href="pages/showdown.html" class="px-8 py-4 rounded-full bg-gradient-to-r from-peppa to-eevee shadow-lg text-white font-bold tracking-widest hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 group">
+            ENTER ARENA
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+          <a href="pages/characters.html" class="px-8 py-4 rounded-full bg-white shadow-neu text-text-main font-bold hover:shadow-neu-pressed transition-all">
+            VIEW STATS
+          </a>
         </div>
       </div>
-    </footer>
 
-    <!-- MINIMAL VANILLA JS: THEME, MENU, SLIDER, PROMPTS -->
-    <script>
-      (function () {
-        const $ = (s, r = document) => r.querySelector(s);
+      <!-- Hero Visual -->
+      <div class="relative h-[500px] w-full flex items-center justify-center z-10">
+         
+         <!-- Peppa Card -->
+         <div class="absolute left-0 top-10 w-64 bg-white/80 backdrop-blur-md p-6 rounded-[2rem] shadow-neu transform -rotate-6 hover:rotate-0 hover:z-20 transition-all duration-500 group border-t-4 border-peppa">
+            <div class="h-48 bg-gradient-to-br from-peppa-light to-white rounded-2xl mb-4 flex items-center justify-center relative overflow-hidden">
+               <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-white to-transparent"></div>
+               <img src="Images/peppa_new.png" class="h-40 object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-500">
+            </div>
+            <h3 class="text-2xl font-black text-peppa-dark">Peppa</h3>
+            <div class="flex gap-2 mt-2">
+              <span class="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
+                <div class="h-full w-3/4 bg-peppa"></div>
+              </span>
+            </div>
+            <p class="text-xs text-text-muted mt-2 font-bold">CHAOS LEVEL: MAX</p>
+         </div>
 
-        // Theme toggle
-        const toggle = $("#themeToggle");
-        const iconSun = $("#icon-sun");
-        const iconMoon = $("#icon-moon");
-        function syncMode() {
-          const dark = document.documentElement.classList.contains("dark");
-          iconSun.classList.toggle("hidden", dark);
-          iconMoon.classList.toggle("hidden", !dark);
-        }
-        toggle?.addEventListener("click", () => {
-          const dark = document.documentElement.classList.toggle("dark");
-          try {
-            localStorage.setItem("theme", dark ? "dark" : "light");
-          } catch (_) {}
-          syncMode();
-        });
-        syncMode();
+         <!-- Eevee Card -->
+         <div class="absolute right-0 bottom-10 w-64 bg-white/80 backdrop-blur-md p-6 rounded-[2rem] shadow-neu transform rotate-6 hover:rotate-0 hover:z-20 transition-all duration-500 group border-t-4 border-eevee">
+            <div class="h-48 bg-gradient-to-br from-eevee-light to-white rounded-2xl mb-4 flex items-center justify-center relative overflow-hidden">
+               <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-white to-transparent"></div>
+               <img src="Images/eevee_gmax.png" class="h-40 object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-500">
+            </div>
+            <h3 class="text-2xl font-black text-eevee-dark">Eevee</h3>
+            <div class="flex gap-2 mt-2">
+              <span class="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
+                <div class="h-full w-4/5 bg-eevee"></div>
+              </span>
+            </div>
+            <p class="text-xs text-text-muted mt-2 font-bold">ADAPTABILITY: HIGH</p>
+         </div>
 
-        // Mobile menu
-        const menuBtn = $("#menuToggle");
-        const mobileMenu = $("#mobileMenu");
-        const iconMenu = $("#icon-menu");
-        const iconClose = $("#icon-close");
-        menuBtn?.addEventListener("click", () => {
-          const open = mobileMenu.classList.toggle("hidden");
-          menuBtn.setAttribute("aria-expanded", String(open));
-          iconMenu.classList.toggle("hidden", open);
-          iconClose.classList.toggle("hidden", !open);
-        });
+      </div>
 
-        mobileMenu?.addEventListener("click", (e) => {
-          if (e.target.tagName === "A") {
-            mobileMenu.classList.add("hidden");
-            menuBtn.setAttribute("aria-expanded", "false");
-            iconMenu.classList.remove("hidden");
-            iconClose.classList.add("hidden");
-          }
-        });
-
-        // Story idea shuffle
-        const ideaBtn = $("#ideaButton");
-        const ideaOut = $("#ideaOutput");
-        const ideas = [
-          "Peppa teaches Eevee how to splash in puddles, but Eevee accidentally evolves a new mud-based move.",
-          "Eevee races through the forest while Peppa cheers from a balloon—who spots the finish line first?",
-          "A surprise picnic turns into a tag-team talent show: Peppa hosts, Eevee performs.",
-          "They swap worlds for a day: Peppa visits a Pokémon center, Eevee visits Peppa’s school.",
-        ];
-        ideaBtn?.addEventListener("click", () => {
-          const i = Math.floor(Math.random() * ideas.length);
-          ideaOut.textContent = ideas[i];
-        });
-
-        // Showdown slider
-        const slider = $("#energySlider");
-        const sliderFill = $("#sliderFill");
-        const sliderLabel = $("#sliderLabel");
-        slider?.addEventListener("input", () => {
-          const v = Number(slider.value);
-          sliderFill.style.width = v + "%";
-          if (v < 30) {
-            sliderLabel.textContent = "Peppa’s chaos is winning this round (in the cutest way).";
-          } else if (v > 70) {
-            sliderLabel.textContent =
-              "Eevee’s strategy is totally in control—soft, smart victory vibes.";
-          } else {
-            sliderLabel.textContent =
-              "Perfect balance: Peppa’s giggles × Eevee’s tactics, no real losers here.";
-          }
-        });
-
-        // Script shuffle
-        const scriptBtn = $("#scriptButton");
-        const scriptLine = $("#scriptLine");
-        const scripts = [
-          "Peppa thinks it’s a dance-off, Eevee thinks it’s a battle—so they invent a battle-dance.",
-          "They both try to protect the same tiny flower, accidentally teaming up instead of fighting.",
-          "Peppa brings snacks, Eevee brings moves. The scoreboard ends up tracking laughs instead of points.",
-          "A sudden rainstorm forces them under the same tree, where they plan the next, even sillier match.",
-        ];
-        scriptBtn?.addEventListener("click", () => {
-          const i = Math.floor(Math.random() * scripts.length);
-          scriptLine.textContent = scripts[i];
-        });
-      })();
-    </script>
+    </main>
+    
+    <script src="js/main.js"></script>
   </body>
 </html>
-
